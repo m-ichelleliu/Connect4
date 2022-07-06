@@ -1,3 +1,19 @@
+body {
+    margin: 0;
+}
+
 .board {
-    display: grid,
+    display: grid;
+    height: 100vh;
+    width: 100vh;
+}
+
+.slot {
+    background-color: yellow;
+    display: inline;
+}
+
+.slot img {
+    width: 100%;
+    height: auto;
 }
