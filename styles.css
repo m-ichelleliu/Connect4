@@ -1,19 +1,60 @@
 body {
     margin: 0;
+    background-color: black;
+    color: white;
+}
+
+.main-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
 }
 
 .board {
     display: grid;
-    height: 100vh;
-    width: 100vh;
+    height: 100vw;
+    width: 100vw;
 }
 
 .slot {
     background-color: pink;
     display: inline;
     cursor: pointer;
+    padding: 5%;
 }
 
 .slot img {
     width: 100%; /* should be min (parent width, parent height). this assumes cols > rows */
 } 
+
+.form-wrapper {
+    font-family: Arial;
+    margin: 40px;
+}
+
+form > * {
+    margin: 10px;
+}
+
+#reset {
+    margin: 10px;
+}
+
+@media screen and (min-width: 800px) {
+    .main-wrapper {
+        flex-direction: row;
+    }
+
+    .board {
+        height: 100vh;
+        width: 100vh;
+        margin-left: auto;
+    }
+}
+
+button {
+    border: 0;
+    padding: 10px;
+    background-color: pink;
+    color: black;
+}

@@ -1,13 +1,30 @@
 <!doctype html>
     <html>
         <head>
-            <title>Our Funky HTML Page</title>
+            <title>CONNECTFORYOU</title>
             <meta name="description" content="Our first page">
             <meta name="keywords" content="html tutorial template">
             <link rel="stylesheet" href="styles.css">
         </head>
     <body>
-        <div class="board">
+        <div class="main-wrapper">
+            <div class="form-wrapper">
+                 <h1>
+                    CONNECTFORYOU
+                 </h1>
+                 <form id="sizeform">
+                    <label for="rows">Rows</label><br>
+                    <input type="text" id="rows" name="rows" value="6"><br>
+                    <label for="cols">Columns</label><br>
+                    <input type="text" id="cols" name="cols" value="7"><br>
+                    <label for="wincondition"># of Pieces to Win</label><br>
+                    <input type="text" id="wincondition" name="wincondition" value="4"><br>
+                    <button type="submit">Submit</button>
+                  </form>
+                  <button id="reset">Reset Board</button>
+            </div>
+            <div class="board">
+            </div>
         </div>
         <script src="script.js"> </script>
     </body>
