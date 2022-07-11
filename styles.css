@@ -9,11 +9,11 @@ body {
 }
 
 .slot {
-    background-color: yellow;
+    background-color: pink;
     display: inline;
+    cursor: pointer;
 }
 
 .slot img {
-    width: 100%;
-    height: auto;
-}
+    width: 100%; /* should be min (parent width, parent height). this assumes cols > rows */
+} 
