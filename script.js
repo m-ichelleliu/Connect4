@@ -3,18 +3,27 @@ let turn = "p1";
 const sizeform = document.getElementById("sizeform");
 let rows = sizeform.elements['rows'].value;
 let cols = sizeform.elements['cols'].value;
-let winCondition = sizeform.elements['wincondition'].value; /* 4 by default */
+let winCondition = sizeform.elements['wincondition'].value;
 let board = [];
 let colHeights = [];
-generateBoard();
+window.addEventListener("load", generateBoard());
 
 sizeform.addEventListener('submit', (e) => {
     e.preventDefault();
     /* Validation not working at the moment */
-    if (sizeform.elements['wincondition'].value > sizeform.elements['rows'].value && sizeform.elements['wincondition'].value > sizeform.elements['cols'].value) {
-        sizeform.appendChild('<p>Bad game rules; impossible win condition</p>');
-        console.log('bruh');
+    let s_wincondition = parseInt(sizeform.elements['wincondition'].value);
+    let s_rows = parseInt(sizeform.elements['rows'].value);
+    let s_cols = parseInt(sizeform.elements['cols'].value);
+    let errormessage = document.querySelector("#sizeform p");
+    if (s_wincondition > s_rows && s_wincondition > s_cols) {
+        if (errormessage == null) {
+            sizeform.insertAdjacentHTML(
+                "beforeend",
+                '<p>Bad game rules; impossible win condition</p>');
+        }
         return;
+    } else {
+        if (errormessage != null) errormessage.remove();
     }
     generateBoard();
 }
@@ -25,12 +34,12 @@ document.getElementById("reset").addEventListener("click", () => {
 }
 )
 
-
 // Generate board
 
 function generateBoard() {
     rows = sizeform.elements['rows'].value;
     cols = sizeform.elements['cols'].value;
+    winCondition = sizeform.elements['wincondition'].value;
     board = [];
     for (let i = 0; i < cols; i++) {
         board.push([]);
@@ -67,6 +76,11 @@ function generateBoard() {
         }
     }
 
+    // Clear win message
+    let winmessage = document.getElementById("win-message");
+    if (winmessage != null) {
+        winmessage.remove();
+    }
 }
 
 // Show piece placement preview on hover
@@ -104,9 +118,26 @@ function dropPiece(column) {
     if (checkForWin(turn)) {
         document.querySelector(".form-wrapper").insertAdjacentHTML(
             "beforeend",
-            `<p>${turn} has won! Click reset to play again</p>`
+            `<p id="win-message">${turn} has won! Click reset to play again</p>`
         )
         // Should now freeze board so as to avoid clogging up the html...
+        /*
+        // Janky callback issues with this (better) approach
+        let slots = document.querySelectorAll(".slot");
+        for (slot of slots) {
+            slot.removeEventListener("click", () => dropPiece(i));
+            slot.removeEventListener("mouseover", () => animateHover(i));
+            slot.removeEventListener("mouseleave", () => restoreSlot(i));
+        }
+        */ 
+       // Duct-taped solution
+       let boardElement = document.getElementsByClassName("board")[0];
+       boardElement.innerHTML = boardElement.innerHTML;
+       // this is O(n) based on # of cols. but should be O(1) based on current mouse pos.
+       for (let i = 1; i <= cols; i++) {
+           restoreSlot(i);
+       }
+       // boardElement.style.removeProperty("cursor"); // Should remove by slot instead of whole board. oops
     }
     if (turn == "p1") turn = "p2";
     else turn = "p1";
@@ -154,7 +185,7 @@ function checkForWin(player) {
     }
 
     // Down-Left Diagonals
-    for (let i = 3; i < cols; i++) {
+    for (let i = winCondition - 1; i < cols; i++) {
         for (let j = 0; j < rows - winCondition + 1; j++) {
             let hasWon = true;
             for (let k = 0; k < winCondition; k++) {
@@ -166,5 +197,3 @@ function checkForWin(player) {
         }
     }
 }
-
-
