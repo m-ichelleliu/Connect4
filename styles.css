@@ -11,13 +11,13 @@ body {
 }
 
 .board {
+    background-color: pink;
     display: grid;
     height: 100vw;
     width: 100vw;
 }
 
 .slot {
-    background-color: pink;
     display: inline;
     cursor: pointer;
     padding: 5%;
