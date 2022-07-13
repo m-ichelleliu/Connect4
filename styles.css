@@ -8,13 +8,17 @@ body {
     display: flex;
     flex-direction: column;
     width: 100vw;
+    height: 100vh;
 }
 
 .board {
     background-color: pink;
     display: grid;
-    height: 100vw;
-    width: 100vw;
+    height: calc(100vw - 30px * 2);
+    width: calc(100vw - 30px * 2);
+    margin: 30px;
+    box-sizing: border-box;
+    border-radius: 30px;
 }
 
 .slot {
@@ -29,27 +33,52 @@ body {
 
 .form-wrapper {
     font-family: Arial;
-    margin: 40px;
+    margin: 20px auto;
 }
 
-form > * {
-    margin: 10px;
+#sizeform {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#sizeform > * {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: none;
+    flex-shrink: 1;
+}
+
+#sizeform > * > input {
+    width: 100%;
 }
 
 #reset {
-    margin: 10px;
+    margin: 10px 0;
 }
 
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 800px),
+screen and (orientation: landscape) {
     .main-wrapper {
         flex-direction: row;
     }
 
     .board {
-        height: 100vh;
-        width: 100vh;
+        height: calc(100vh - 30px * 2);
+        width: calc(100vh - 30px * 2);
         margin-left: auto;
     }
+
+    #sizeform {
+        flex-direction: column;
+        width: 60%;
+    }
+
+    #sizeform > * {
+        display: flex;
+        flex-direction: row;
+    }    
 }
 
 button {
@@ -57,4 +86,5 @@ button {
     padding: 10px;
     background-color: pink;
     color: black;
+    cursor: pointer;
 }

@@ -6,6 +6,7 @@ class GameBoard {
         this.cols = cols;
         this.winCondition = winCondition;
         this.turn = "p1";
+        this.boardElement = document.getElementsByClassName("board")[0];
 
         // Initialize board state
         for (let i = 0; i < cols; i++) {
@@ -21,13 +22,12 @@ class GameBoard {
 
     render() {
         // Render board on page
-        let boardElement = document.getElementsByClassName("board")[0];
-        boardElement.innerHTML = "";
-        boardElement.style.gridTemplateColumns = `repeat(${this.cols}, 1fr)`;
-        boardElement.style.gridTemplateRows = `repeat(${this.rows}, 1fr)`;
+        this.boardElement.innerHTML = "";
+        this.boardElement.style.gridTemplateColumns = `repeat(${this.cols}, 1fr)`;
+        this.boardElement.style.gridTemplateRows = `repeat(${this.rows}, 1fr)`;
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.cols; j++) {
-                boardElement.insertAdjacentHTML("afterbegin",
+                this.boardElement.insertAdjacentHTML("afterbegin",
                     `<div class='slot'> 
                      <img src='assets/empty.png'></img>
                     </div>`
@@ -57,9 +57,7 @@ class GameBoard {
         console.log(`dropped in ${column}`);
         this.board[column-1][this.colHeights[column-1]] = this.turn;
         // CHECK FOR OUT OF BOUNDS BTW
-        let img = this.lowestEmptySlot(column);
-        img.setAttribute("src", `assets/${this.turn}.png`);
-        img.style.opacity = 1;
+        this.updateLowestEmptySlot(column, `assets/${this.turn}.png`, 1);
         this.colHeights[column-1]++;
         if (this.checkForWin(this.turn)) {
             document.querySelector(".form-wrapper").insertAdjacentHTML(
@@ -68,7 +66,7 @@ class GameBoard {
             )
             // Should now freeze board so as to avoid clogging up the html...
             /*
-            // Janky callback issues with this (better) approach
+            // Janky callback issues with this (cleaner) approach
             let slots = document.querySelectorAll(".slot");
             for (slot of slots) {
                 slot.removeEventListener("click", () => dropPiece(i));
@@ -76,24 +74,24 @@ class GameBoard {
                 slot.removeEventListener("mouseleave", () => restoreSlot(i));
             }
             */  
-            // Duct-taped solution to clear event listeners
-            let boardElement = document.getElementsByClassName("board")[0];
-            boardElement.innerHTML = boardElement.innerHTML;
+            // For now: duct-taped solution to clear event listeners
+            this.boardElement.innerHTML = this.boardElement.innerHTML;
             // this is O(n) on # of cols. but should be O(1) based on current mouse pos.
             for (let i = 1; i <= this.cols; i++) {
-                console.log(i);
                 this.restoreSlot(i);
             }
             return;
-            // WHY IS IT ANIMATING HOVER
             // boardElement.style.removeProperty("cursor"); // Should remove by slot instead of whole board. oops
         }
         if (this.turn == "p1") this.turn = "p2";
         else this.turn = "p1";
-        img.dispatchEvent(new MouseEvent("mouseover", {"bubbles": true}));
+        if (this.lowestEmptySlotImg(column) != null)
+            this.lowestEmptySlotImg(column).dispatchEvent(new MouseEvent("mouseover", {"bubbles": true}));
     }
-
+    
     checkForWin(player) {
+        // This could probably be condensed but I can't yet think of a way to condense it that doesn't sacrifice readability
+
         // Verticals
         for (let i = 0; i < this.cols; i++) {
             for (let j = 0; j < this.rows - this.winCondition + 1; j++) {
@@ -149,30 +147,30 @@ class GameBoard {
 
     // Show piece placement preview on hover
 
-    lowestEmptySlot(column) {
+    lowestEmptySlotImg(column) {
         const slotIndex = column + this.cols * (this.rows - this.colHeights[column - 1] - 1);
         const slot = document.querySelector(`.slot:nth-child(${slotIndex})`);
+        if (slot == null) return null;
         const img = slot.firstElementChild;
         return img;
     }
 
+    updateLowestEmptySlot(column, filepath, opacity) {
+        let img = this.lowestEmptySlotImg(column);
+        if (img == null) return;
+        img.setAttribute("src", filepath);
+        img.style.opacity = opacity;
+    }
+
     animateHover(column) {
-        let img = this.lowestEmptySlot(column);
-        img.setAttribute("src", `assets/${this.turn}.png`);
-        img.style.opacity = 0.30;
-        console.log("a");
+        this.updateLowestEmptySlot(column, `assets/${this.turn}.png`, 0.30);
     }
 
     restoreSlot(column) {
-        let img = this.lowestEmptySlot(column);
-        img.setAttribute("src", `assets/empty.png`);
-        img.style.opacity = 1;
-        console.log(img.style.opacity);
-        console.log(img.style);
+        this.updateLowestEmptySlot(column, `assets/empty.png`, 1);
     }
 }
 
-let turn = "p1";
 const sizeform = document.getElementById("sizeform");
 let gameBoard = new GameBoard(...readFormInput());
 window.addEventListener("load", gameBoard.render());
@@ -185,14 +183,17 @@ function readFormInput() {
 }
 
 // Menu button functionality
+
+// Submit button
 sizeform.addEventListener('submit', (e) => {
     e.preventDefault();
-    /* Validation not working at the moment */
-    let s_wincondition = parseInt(sizeform.elements['wincondition'].value);
-    let s_rows = parseInt(sizeform.elements['rows'].value);
-    let s_cols = parseInt(sizeform.elements['cols'].value);
+    let input = readFormInput();
+    let s_rows = input[0];
+    let s_cols = input[1];
+    let s_wincondition = input[2];
     let errormessage = document.querySelector("#sizeform p");
     if (s_wincondition > s_rows && s_wincondition > s_cols) {
+        console.log("Bad");
         if (errormessage == null) {
             sizeform.insertAdjacentHTML(
                 "beforeend",
@@ -207,6 +208,7 @@ sizeform.addEventListener('submit', (e) => {
 }
 )
 
+// Reset button
 document.getElementById("reset").addEventListener("click", () => {
     gameBoard = new GameBoard(...readFormInput());
     gameBoard.render();
