@@ -19,11 +19,13 @@ body {
     margin: 30px;
     box-sizing: border-box;
     border-radius: 30px;
+    position: relative;
 }
 
 .slot {
     display: inline;
     cursor: pointer;
+    position: relative;
     padding: 5%;
 }
 
