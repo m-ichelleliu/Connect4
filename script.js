@@ -2,6 +2,7 @@ class GameBoard {
     constructor(rows, cols, winCondition) {
         this.board = [];
         this.colHeights = [];
+        this.visualHeights = [];
         this.rows = rows;
         this.cols = cols;
         this.winCondition = winCondition;
@@ -17,6 +18,7 @@ class GameBoard {
         }
         for (let i = 0; i < cols; i++) {
             this.colHeights.push(0);
+            this.visualHeights.push(0);
         }
     }
 
@@ -61,6 +63,7 @@ class GameBoard {
 
         // Update board state
         this.board[column-1][this.colHeights[column-1]] = this.turn;
+        this.colHeights[column-1]++;
         console.log(this.board);
         console.log(this.colHeights);
         
@@ -76,11 +79,11 @@ class GameBoard {
         let piece_y = this.rows;
         let currentTurn = this.turn;
         let timer = setInterval(() => {
-            if (piece_y == this.colHeights[column - 1]) {
+            if (piece_y == this.visualHeights[column - 1]) {
                 // Finish
                 clearInterval(timer);
                 this.updateLowestEmptySlot(column, `assets/${currentTurn}.png`, 1);
-                this.colHeights[column-1]++;
+                this.visualHeights[column-1]++;
             }
             else {
                 // Descend by 1
@@ -181,22 +184,24 @@ class GameBoard {
     // Show piece placement preview on hover
 
     lowestEmptySlotImg(column) {
-        const slotIndex = column + this.cols * (this.rows - this.colHeights[column - 1] - 1);
+        const slotIndex = column + this.cols * (this.rows - this.visualHeights[column - 1] - 1);
         const slot = document.querySelector(`.slot:nth-child(${slotIndex})`);
         if (slot == null) return null;
         const img = slot.firstElementChild;
         return img;
     }
 
-    updateLowestEmptySlot(column, filepath, opacity) {
+    updateLowestEmptySlot(column, filepath, opacity, hovering=false) {
         let img = this.lowestEmptySlotImg(column);
         if (img == null) return;
         img.setAttribute("src", filepath);
         img.style.opacity = opacity;
+        if (hovering) img.className = "hover-piece";
+        else img.className = "";
     }
 
     animateHover(column) {
-        this.updateLowestEmptySlot(column, `assets/${this.turn}.png`, 0.50);
+        this.updateLowestEmptySlot(column, `assets/${this.turn}.png`, 1, true);
     }
 
     restoreSlot(column) {
@@ -251,9 +256,9 @@ sizeform.addEventListener('submit', (e) => {
 }
 )
 
-// Reset button
-document.getElementById("reset").addEventListener("click", () => {
-    gameBoard = new GameBoard(...readFormInput());
-    gameBoard.render();
-}
-)
+// // Reset button
+// document.getElementById("reset").addEventListener("click", () => {
+//     gameBoard = new GameBoard(...readFormInput());
+//     gameBoard.render();
+// }
+// )

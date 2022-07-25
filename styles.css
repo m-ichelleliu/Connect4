@@ -41,6 +41,10 @@ body {
     padding: 5%;
 }
 
+.hover-piece {
+    filter: saturate(60%) opacity(.5);
+}
+
 .slot img {
     width: 100%; /* should be min (parent width, parent height). this assumes cols > rows */
 } 
