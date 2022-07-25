@@ -40,7 +40,7 @@ class GameBoard {
             let column = document.querySelectorAll(`.board .slot:nth-child(${this.cols}n+${i})`);
             for (const slot of column) {
                 slot.addEventListener("click", () => this.dropPiece(i));
-                slot.addEventListener("mouseenter", () => this.animateHover(i));
+                slot.addEventListener("mouseover", () => this.animateHover(i));
                 slot.addEventListener("mouseleave", () => this.restoreSlot(i));
             }
         }
@@ -75,16 +75,15 @@ class GameBoard {
         // Simpler animate dropping
         let piece_y = this.rows;
         let currentTurn = this.turn;
-        this.lowestEmptySlotImg(column).dispatchEvent(new MouseEvent("mouseleave", {"bubbles": true}));
         let timer = setInterval(() => {
             if (piece_y == this.colHeights[column - 1]) {
+                // Finish
                 clearInterval(timer);
                 this.updateLowestEmptySlot(column, `assets/${currentTurn}.png`, 1);
                 this.colHeights[column-1]++;
-                if (this.lowestEmptySlotImg(column) != null)
-                    this.lowestEmptySlotImg(column).dispatchEvent(new MouseEvent("mouseenter", {"bubbles": true}));
             }
             else {
+                // Descend by 1
                 if (piece_y != this.rows)
                     this.imageAtPos(this.rows - piece_y, column + 1).setAttribute("src", `assets/empty.png`);
                 this.imageAtPos(this.rows - piece_y + 1, column + 1).setAttribute("src", `assets/${currentTurn}.png`);
@@ -121,8 +120,6 @@ class GameBoard {
         // If game has not ended, prepare for the next turn
         if (this.turn == "p1") this.turn = "p2";
         else this.turn = "p1";
-        if (this.lowestEmptySlotImg(column) != null)
-            this.lowestEmptySlotImg(column).dispatchEvent(new MouseEvent("mouseenter", {"bubbles": true}));
     }
 
     checkForWin(player) {
@@ -199,7 +196,7 @@ class GameBoard {
     }
 
     animateHover(column) {
-        this.updateLowestEmptySlot(column, `assets/${this.turn}.png`, 0.30);
+        this.updateLowestEmptySlot(column, `assets/${this.turn}.png`, 0.50);
     }
 
     restoreSlot(column) {

@@ -46,14 +46,16 @@ body {
 } 
 
 .form-wrapper {
-    background-color: #ff4b3e;
+    background-color: #ff8c2d;
     padding: 20px;
+    width: 40%;
 }
 
 #sizeform {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    min-width: 220px;
 }
 
 #sizeform > * {
@@ -91,10 +93,9 @@ screen and (orientation: landscape) {
         color: white;
         position: fixed;
         width: 100vw;
-        background-color: #ff4b3e;
+        background-color: #ff8c2d;
         z-index: -1;
-        opacity: 0.5;
-        height: 60vh;
+        height: 65vh;
         top: 15vh;
     }
     
@@ -126,7 +127,7 @@ screen and (orientation: landscape) {
     }
 
     #sizeform > * {
-        margin: 2px 0;
+        margin: 0;
     }
 
     #sizeform > .input-group {
@@ -137,6 +138,10 @@ screen and (orientation: landscape) {
         padding: 10px 0;
         justify-content: space-between;
     }  
+
+    #submit {
+        margin: 10px 0 0 0;
+    }
 
     #sizeform > * > input {
         width: 50px;
@@ -151,11 +156,11 @@ input, button {
 button {
     border: 0;
     padding: 10px;
-    background-color: white;
-    color: black;
+    background-color: #ff4b3e;
+    color: white;
     cursor: pointer;
     text-align: center;
-    width: 100px;
+    width: 100%;
 }
 
 button,
