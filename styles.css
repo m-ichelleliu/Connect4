@@ -1,7 +1,8 @@
 body {
     margin: 0;
-    background-color: black;
+    background-color: #F9C22E;
     color: white;
+    font-family: 'Press Start 2P', cursive;
 }
 
 .main-wrapper {
@@ -9,10 +10,19 @@ body {
     flex-direction: column;
     width: 100vw;
     height: 100vh;
+    box-sizing: border-box;
+}
+
+.title {
+    word-break: break-all;
+}
+
+#title-main {
+    display: none;
 }
 
 .board {
-    background-color: pink;
+    background-color: #ff4b3e;
     display: grid;
     height: calc(100vw - 30px * 2);
     width: calc(100vw - 30px * 2);
@@ -20,6 +30,8 @@ body {
     box-sizing: border-box;
     border-radius: 30px;
     position: relative;
+    /* box-shadow: 0 0 5px 5px white; */
+    padding: 10px;
 }
 
 .slot {
@@ -34,8 +46,8 @@ body {
 } 
 
 .form-wrapper {
-    font-family: Arial;
-    margin: 20px auto;
+    background-color: #ff4b3e;
+    padding: 20px;
 }
 
 #sizeform {
@@ -50,43 +62,103 @@ body {
     justify-content: space-between;
     border: none;
     flex-shrink: 1;
+    margin: 10px;
 }
 
 #sizeform > * > input {
     width: 100%;
+    padding: 3%;
 }
 
 #reset {
     margin: 10px 0;
 }
 
-@media screen and (min-width: 800px),
+#win-message {
+    width: 100%;
+}
+
+/* @media screen and (min-width:) */
+
+@media screen and (min-width: 884px),
 screen and (orientation: landscape) {
     .main-wrapper {
         flex-direction: row;
     }
 
+    body::before {
+        content: ""; 
+        color: white;
+        position: fixed;
+        width: 100vw;
+        background-color: #ff4b3e;
+        z-index: -1;
+        opacity: 0.5;
+        height: 60vh;
+        top: 15vh;
+    }
+    
+    #title-main {
+        display: none;
+    }
+
+    #title-side {
+        margin: 0;
+    }
+
+    .form-wrapper {
+        margin: 25vh auto;
+        background: none;
+        padding: 0 30px;
+    }
+
     .board {
         height: calc(100vh - 30px * 2);
         width: calc(100vh - 30px * 2);
+        min-width: calc(100vh - 30px * 2);
         margin-left: auto;
     }
 
     #sizeform {
         flex-direction: column;
         width: 60%;
+        margin: 25px 0;
     }
 
     #sizeform > * {
+        margin: 2px 0;
+    }
+
+    #sizeform > .input-group {
         display: flex;
         flex-direction: row;
-    }    
+        width: 100%;
+        min-width: 220px;
+        padding: 10px 0;
+        justify-content: space-between;
+    }  
+
+    #sizeform > * > input {
+        width: 50px;
+    }
+}
+
+input, button {
+    border-radius: 8px;
+    border: none;
 }
 
 button {
     border: 0;
     padding: 10px;
-    background-color: pink;
+    background-color: white;
     color: black;
     cursor: pointer;
+    text-align: center;
+    width: 100px;
+}
+
+button,
+input {
+    font-family: 'Press Start 2P', cursive;
 }

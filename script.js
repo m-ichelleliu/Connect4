@@ -40,7 +40,7 @@ class GameBoard {
             let column = document.querySelectorAll(`.board .slot:nth-child(${this.cols}n+${i})`);
             for (const slot of column) {
                 slot.addEventListener("click", () => this.dropPiece(i));
-                slot.addEventListener("mouseover", () => this.animateHover(i));
+                slot.addEventListener("mouseenter", () => this.animateHover(i));
                 slot.addEventListener("mouseleave", () => this.restoreSlot(i));
             }
         }
@@ -62,27 +62,27 @@ class GameBoard {
         // Update board state
         this.board[column-1][this.colHeights[column-1]] = this.turn;
         console.log(this.board);
+        console.log(this.colHeights);
         
-        // Animate dropping
+        // Animate dropping (oops the z-indices are iffy in this approach)
         // let colwidth = getComputedStyle(this.lowestEmptySlotImg(column)).getPropertyValue("width");
         // let colpos = getComputedStyle(this.lowestEmptySlotImg(column)).getPropertyValue("left");
         // console.log(colwidth + " " + colpos);
-        
         // const fallingPiece = document.createElement("img");
         // fallingPiece.innerHTML = ""
-
         // console.log(getComputedStyle(this.lowestEmptySlotImg(column)));
 
         // Simpler animate dropping
         let piece_y = this.rows;
         let currentTurn = this.turn;
+        this.lowestEmptySlotImg(column).dispatchEvent(new MouseEvent("mouseleave", {"bubbles": true}));
         let timer = setInterval(() => {
             if (piece_y == this.colHeights[column - 1]) {
                 clearInterval(timer);
                 this.updateLowestEmptySlot(column, `assets/${currentTurn}.png`, 1);
                 this.colHeights[column-1]++;
                 if (this.lowestEmptySlotImg(column) != null)
-                    this.lowestEmptySlotImg(column).dispatchEvent(new MouseEvent("mouseover", {"bubbles": true}));
+                    this.lowestEmptySlotImg(column).dispatchEvent(new MouseEvent("mouseenter", {"bubbles": true}));
             }
             else {
                 if (piece_y != this.rows)
@@ -104,7 +104,7 @@ class GameBoard {
             let slots = document.querySelectorAll(".slot");
             for (slot of slots) {
                 slot.removeEventListener("click", () => dropPiece(i));
-                slot.removeEventListener("mouseover", () => animateHover(i));
+                slot.removeEventListener("mouseenter", () => animateHover(i));
                 slot.removeEventListener("mouseleave", () => restoreSlot(i));
             }
             */  
@@ -122,7 +122,7 @@ class GameBoard {
         if (this.turn == "p1") this.turn = "p2";
         else this.turn = "p1";
         if (this.lowestEmptySlotImg(column) != null)
-            this.lowestEmptySlotImg(column).dispatchEvent(new MouseEvent("mouseover", {"bubbles": true}));
+            this.lowestEmptySlotImg(column).dispatchEvent(new MouseEvent("mouseenter", {"bubbles": true}));
     }
 
     checkForWin(player) {
@@ -208,10 +208,8 @@ class GameBoard {
 
     // Helper functions for animation
 
-    // 
     imageAtPos(row, col) { 
         const slotIndex = (col - 1) + this.cols * (row - 1);
-        console.log(slotIndex);
         const slot = document.querySelector(`.slot:nth-child(${slotIndex})`);
         if (slot == null) return null;
         const img = slot.firstElementChild;
