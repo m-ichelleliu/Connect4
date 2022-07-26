@@ -42,7 +42,7 @@ class GameBoard {
             let column = document.querySelectorAll(`.board .slot:nth-child(${this.cols}n+${i})`);
             for (const slot of column) {
                 slot.addEventListener("click", () => this.dropPiece(i));
-                slot.addEventListener("mouseover", () => this.animateHover(i));
+                slot.addEventListener("mouseenter", () => this.animateHover(i));
                 slot.addEventListener("mouseleave", () => this.restoreSlot(i));
             }
         }
@@ -84,6 +84,12 @@ class GameBoard {
                 clearInterval(timer);
                 this.updateLowestEmptySlot(column, `assets/${currentTurn}.png`, 1);
                 this.visualHeights[column-1]++;
+                // Ensure hover piece is being rendered
+                let elementsMouseIsOn = document.querySelectorAll( ":hover" );
+                let hoveredPiece = elementsMouseIsOn[elementsMouseIsOn.length - 2];
+                console.log(hoveredPiece);
+                hoveredPiece.dispatchEvent(new MouseEvent("mouseenter", {"bubbles": true}));
+         
             }
             else {
                 // Descend by 1
@@ -123,7 +129,7 @@ class GameBoard {
         // If game has not ended, prepare for the next turn
         if (this.turn == "p1") this.turn = "p2";
         else this.turn = "p1";
-    }
+   }
 
     checkForWin(player) {
         // This could probably be condensed but I can't yet think of a way to condense it that doesn't sacrifice readability

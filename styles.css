@@ -42,7 +42,7 @@ body {
 }
 
 .hover-piece {
-    filter: saturate(60%) opacity(.5);
+    filter: saturate(60%) opacity(0.5)  brightness(1.5) drop-shadow(0 0 5px white);
 }
 
 .slot img {
